@@ -1,6 +1,6 @@
-﻿using CQRSPattern.Commands.Repository;
-using CQRSPattern.Commands.UOW;
+﻿using CQRSPattern.Commands.UOW;
 using CQRSPattern.Interfaces;
+using CQRSPattern.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +9,13 @@ namespace CQRSPattern.Commands
 {
     public class CommandHandler<TEntity> : ICommandHandler<TEntity>,  IDisposable  where TEntity : class
     {
-        private IRepository<TEntity> _repo { get; set; }
+        private IEntityRepository<TEntity> _repo { get; set; }
         private IUnitOfWork _uow { get; set; }
-
         public CommandHandler(DbContext context)
         {
-            _repo = new Repository<TEntity>(context);
+            _repo = new EntityRepository<TEntity>(context);
             _uow = new UnitOfWork(context);
         }
-
         public void Add(TEntity entity) => _repo.Add(entity);
         public void AddRange(IEnumerable<TEntity> entities) => _repo.AddRange(entities);
         public void Remove(TEntity entity) => _repo.Remove(entity);
